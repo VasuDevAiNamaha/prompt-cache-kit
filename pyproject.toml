@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "prompt-cache-kit"
+version = "0.1.0"
+description = "Framework-neutral LLM cache orchestration, prompt layout, and LMCache/vLLM helper utilities."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Prompt Cache Kit contributors" }]
+keywords = ["llm", "cache", "prompt-caching", "lmcache", "vllm", "langchain", "crewai"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/VasuTech01/prompt-cache-kit"
+Repository = "https://github.com/VasuTech01/prompt-cache-kit"
+Issues = "https://github.com/VasuTech01/prompt-cache-kit/issues"
+Changelog = "https://github.com/VasuTech01/prompt-cache-kit/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "pytest-asyncio>=0.23",
+  "ruff>=0.6",
+  "bandit>=1.7",
+  "pip-audit>=2.7",
+  "pre-commit>=3.7",
+]
+langchain = ["langchain-core>=0.2"]
+redis = ["redis>=5"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 130
+target-version = "py39"
+exclude = ["examples"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "S"]
+ignore = ["S101", "I001"] # allow assert in tests; avoid import-sorting churn in library exports
+
+[tool.ruff.lint.per-file-ignores]
+"src/prompt_cache_kit/redis_backend.py" = ["S301"]
+"src/prompt_cache_kit/engine.py" = ["S310"]
+
+[tool.bandit]
+skips = ["B101"] # allow assert usage in tests
+exclude_dirs = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/prompt_cache_kit"]
