@@ -61,8 +61,8 @@ select = ["E", "F", "W", "I", "B", "S"]
 ignore = ["S101", "I001"] # allow assert in tests; avoid import-sorting churn in library exports
 
 [tool.ruff.lint.per-file-ignores]
-"src/prompt_cache_kit/redis_backend.py" = ["S301"]
-"src/prompt_cache_kit/engine.py" = ["S310"]
+"src/prompt_cache_kit/serializers/pickle.py" = ["S301", "S403"]
+"src/prompt_cache_kit/clients/lmcache.py" = ["S310"]
 
 [tool.bandit]
 skips = ["B101"] # allow assert usage in tests

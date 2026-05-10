@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from .backend import CacheBackend
-from .policy import CachePolicy
-from .telemetry import UsageStats, normalize_usage
-from .wrappers import CachedModel
+from ..core import CachePolicy
+from ..types import CacheBackend
+from ..telemetry import UsageStats, normalize_usage
+from ..wrappers import CachedModel
 
 
 def wrap_langchain_model(

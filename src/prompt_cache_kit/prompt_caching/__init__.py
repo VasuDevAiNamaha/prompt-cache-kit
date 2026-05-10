@@ -1,37 +1,36 @@
-"""Compatibility exports for prompt caching APIs.
-
-Prefer importing from `prompt_cache_kit.prompt_caching` in new code.
-"""
-
-from .prompt_caching import (
+from .compilers import (
     AnthropicCachePointCompiler,
     BedrockCachePointCompiler,
-    CacheDirective,
     CachePointCompiler,
+    GenericCachePointCompiler,
+    compiler_for_provider,
+    create_anthropic_cache_control,
+    create_bedrock_cache_point,
+)
+from .apply import (
+    apply_cache_points,
+    cache_at,
+    cache_until,
+    rolling_cache,
+)
+from .strategies import (
+    CacheDirective,
     CachePointSuggestion,
     CacheUntilPromptCachingStrategy,
-    GenericCachePointCompiler,
     ManualPromptCachingStrategy,
     MessageCachePlan,
     PromptCachingContext,
     PromptCachingStrategy,
     RollingPromptCachingStrategy,
     StablePrefixPromptCachingStrategy,
-    apply_cache_points,
-    cache_at,
-    cache_until,
-    compiler_for_provider,
-    create_anthropic_cache_control,
-    create_bedrock_cache_point,
     plan_cache_points,
-    rolling_cache,
     suggest_cache_points,
 )
 
 __all__ = [
+    "CacheDirective",
     "AnthropicCachePointCompiler",
     "BedrockCachePointCompiler",
-    "CacheDirective",
     "CachePointCompiler",
     "CachePointSuggestion",
     "CacheUntilPromptCachingStrategy",

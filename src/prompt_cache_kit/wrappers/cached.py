@@ -3,11 +3,11 @@ from __future__ import annotations
 import functools
 import inspect
 from dataclasses import dataclass
-from typing import Any, Callable, Iterable, Optional
+from typing import Any, Callable, Optional
 
-from .backend import CacheBackend, MemoryCacheBackend
-from .keys import default_cache_key
-from .policy import CachePolicy
+from ..backends import MemoryCacheBackend
+from ..core import CachePolicy, default_cache_key
+from ..types import CacheBackend
 
 
 @dataclass(frozen=True)
@@ -77,55 +77,6 @@ def cached(
         return wrapper
 
     return decorate(func) if func is not None else decorate
-
-
-class CachedModel:
-    """Proxy that wraps common model methods while delegating everything else."""
-
-    def __init__(
-        self,
-        model: Any,
-        *,
-        backend: Optional[CacheBackend] = None,
-        policy: Optional[CachePolicy] = None,
-        methods: Iterable[str] = ("invoke", "ainvoke", "generate", "agenerate", "__call__"),
-        identity: Optional[str] = None,
-    ) -> None:
-        self._model = model
-        self._backend = backend or MemoryCacheBackend()
-        self._policy = policy or CachePolicy()
-        self._methods = set(methods)
-        self._identity = identity or f"{type(model).__module__}.{type(model).__qualname__}"
-
-    def __getattr__(self, name: str) -> Any:
-        attr = getattr(self._model, name)
-        if name not in self._methods or not callable(attr):
-            return attr
-        return cached(
-            attr,
-            backend=self._backend,
-            policy=self._policy,
-            identity=f"{self._identity}.{name}",
-        )
-
-    def __call__(self, *args: Any, **kwargs: Any) -> Any:
-        if "__call__" not in self._methods:
-            return self._model(*args, **kwargs)
-        wrapped = cached(
-            self._model,
-            backend=self._backend,
-            policy=self._policy,
-            identity=f"{self._identity}.__call__",
-        )
-        return wrapped(*args, **kwargs)
-
-    @property
-    def wrapped(self) -> Any:
-        return self._model
-
-    @property
-    def cache_backend(self) -> CacheBackend:
-        return self._backend
 
 
 def _make_key(policy: CachePolicy, identity: str, args: tuple, kwargs: dict) -> str:

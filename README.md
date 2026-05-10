@@ -367,3 +367,6 @@ Prompt Cache Kit cannot:
 pip install -e ".[dev]"
 python -m pytest
 ```
+
+See [docs/architecture.md](docs/architecture.md) for the internal module layout
+and extension-point design.

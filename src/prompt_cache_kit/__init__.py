@@ -1,36 +1,47 @@
 """Framework-neutral cache orchestration utilities for LLM applications."""
 
-from .backend import CacheEntry, CacheStats, MemoryCacheBackend
-from .cache_points import (
-    CacheUntilPromptCachingStrategy,
+from .backends import MemoryCacheBackend, RedisCacheBackend
+from .clients import LMCacheClient
+from .core import CachePolicy, default_cache_key
+from .integrations import VLLMConfig, extract_langchain_usage, make_langchain_cache, wrap_crewai_llm, wrap_langchain_model
+from .prompt_caching.apply import (
+    apply_cache_points,
+    cache_at,
+    cache_until,
+    rolling_cache,
+)
+from .prompt_caching.compilers import (
+    AnthropicCachePointCompiler,
+    BedrockCachePointCompiler,
+    CachePointCompiler,
+    GenericCachePointCompiler,
+    compiler_for_provider,
+    create_anthropic_cache_control,
+    create_bedrock_cache_point,
+)
+from .prompt_caching.strategies import (
     CacheDirective,
+    CachePointSuggestion,
+    CacheUntilPromptCachingStrategy,
     ManualPromptCachingStrategy,
     MessageCachePlan,
-    CachePointSuggestion,
     PromptCachingContext,
     PromptCachingStrategy,
     RollingPromptCachingStrategy,
     StablePrefixPromptCachingStrategy,
-    apply_cache_points,
-    cache_at,
-    cache_until,
-    create_anthropic_cache_control,
-    create_bedrock_cache_point,
     plan_cache_points,
-    rolling_cache,
     suggest_cache_points,
 )
-from .engine import LMCacheClient, VLLMConfig
-from .integrations import extract_langchain_usage, make_langchain_cache, wrap_crewai_llm, wrap_langchain_model
-from .keys import default_cache_key
-from .layout import CacheBlock, LintIssue, PromptLayout
-from .policy import CachePolicy
-from .redis_backend import RedisCacheBackend
+from .prompt_layout import CacheBlock, LintIssue, PromptLayout
 from .telemetry import CachePoint, MessageUsage, UsageStats, analyze_messages, estimate_tokens, merge_usage, normalize_usage
+from .types import CacheEntry, CacheStats
 from .wrappers import CachedModel, cached
 
 __all__ = [
     "CacheBlock",
+    "AnthropicCachePointCompiler",
+    "BedrockCachePointCompiler",
+    "CachePointCompiler",
     "CacheUntilPromptCachingStrategy",
     "CacheEntry",
     "CachePolicy",
@@ -41,6 +52,7 @@ __all__ = [
     "CachePointSuggestion",
     "CacheStats",
     "CachedModel",
+    "GenericCachePointCompiler",
     "LMCacheClient",
     "LintIssue",
     "MemoryCacheBackend",
@@ -58,6 +70,7 @@ __all__ = [
     "cached",
     "cache_at",
     "cache_until",
+    "compiler_for_provider",
     "create_anthropic_cache_control",
     "create_bedrock_cache_point",
     "default_cache_key",

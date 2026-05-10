@@ -1,5 +1,6 @@
 from prompt_cache_kit import (
     CacheDirective,
+    GenericCachePointCompiler,
     PromptCachingStrategy,
     apply_cache_points,
     cache_at,
@@ -132,3 +133,24 @@ def test_custom_prompt_caching_strategy_can_be_extended():
 
     assert suggestions[0].message_index == 1
     assert suggestions[0].cache_point.id == "last-assistant"
+
+
+def test_apply_cache_points_accepts_custom_compiler():
+    class ProviderXCompiler(GenericCachePointCompiler):
+        def apply(self, message, point):
+            result = dict(message)
+            if point is not None:
+                result["provider_x_cache"] = point.id
+            return result
+
+    messages = [{"role": "system", "content": "one two three", "stable": True}]
+
+    marked = apply_cache_points(
+        messages,
+        plan=cache_until(0, id="provider-x-boundary"),
+        provider="provider-x",
+        compiler=ProviderXCompiler(),
+        token_counter=count_words,
+    )
+
+    assert marked[0]["provider_x_cache"] == "provider-x-boundary"
